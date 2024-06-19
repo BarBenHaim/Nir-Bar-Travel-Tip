@@ -16,6 +16,7 @@ window.app = {
   onShareLoc,
   onSetSortBy,
   onSetFilterBy,
+  onChangeTheme,
 }
 
 function onInit() {
@@ -353,4 +354,37 @@ function cleanStats(stats) {
     return acc
   }, [])
   return cleanedStats
+}
+function onChangeTheme(val) {
+  console.log(val)
+  switch (val) {
+    case 'dark':
+      changeToDark()
+      break
+    case 'green':
+      changeToGreen()
+      break
+  }
+}
+
+function changeToDark() {
+  console.log('hi')
+
+  const elHeader = document.querySelector('header')
+  const elLocShow = document.querySelector('.selected-loc.show')
+  const elLocContanir = document.querySelector('.locs-container')
+  elHeader.style.backgroundColor = 'gray'
+  elLocShow.style.backgroundColor = 'darkgray'
+  elLocContanir.style.backgroundColor = 'darkgray'
+}
+
+function changeToGreen() {
+  console.log('hi')
+
+  const elHeader = document.querySelector('header')
+  const elLocShow = document.querySelector('.selected-loc.show')
+  const elLocContanir = document.querySelector('.locs-container')
+  elHeader.style.backgroundColor = 'green'
+  elLocShow.style.backgroundColor = 'lightgreen'
+  elLocContanir.style.backgroundColor = 'lightgreen'
 }

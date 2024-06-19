@@ -19,6 +19,12 @@
         <button onclick="app.onCopyLoc()">Copy location</button>
         <button onclick="app.onShareLoc()">Share location</button>
         <input name="loc-copier" />
+        <label for="themeSelector"> Color Theme:</label>
+        <select id="themeSelector" onchange="app.onChangeTheme(value)">
+          <option value="dark">Dark</option>
+
+          <option value="green">Green</option>
+        </select>
       </section>
       <form class="form-search" onsubmit="app.onSearchAddress(event)">
         <input type="text" name="address" placeholder="Search address" />
