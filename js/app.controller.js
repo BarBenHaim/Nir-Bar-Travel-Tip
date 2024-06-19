@@ -116,28 +116,47 @@ function onSearchAddress(ev) {
       flashMsg('Cannot lookup address')
     })
 }
+
 // only loc service
-
 function onAddLoc(geo) {
-  const locName = prompt('Loc name', geo.address || 'Just a place')
-  if (!locName) return
+  const modal = showModal('Add Location', 'Add')
+  const nameInput = modal.querySelector('.new-loc-name')
+  const rateInput = modal.querySelector('.new-loc-rate')
 
-  const loc = {
-    name: locName,
-    rate: +prompt(`Rate (1-5)`, '3'),
-    geo,
+  nameInput.value = ''
+  rateInput.value = ''
+
+  const form = modal.querySelector('form')
+  form.onsubmit = function (event) {
+    event.preventDefault()
+
+    const locName = nameInput.value
+    const locRate = +rateInput.value
+
+    if (!locName || !locRate) {
+      modal.close()
+      return
+    }
+
+    const loc = {
+      name: locName,
+      rate: locRate,
+      geo,
+    }
+
+    locService
+      .save(loc)
+      .then((savedLoc) => {
+        flashMsg(`Added Location (id: ${savedLoc.id})`)
+        utilService.updateQueryParams({ locId: savedLoc.id })
+        loadAndRenderLocs()
+        modal.close()
+      })
+      .catch((err) => {
+        console.error('OOPs:', err)
+        flashMsg('Cannot add location')
+      })
   }
-  locService
-    .save(loc)
-    .then((savedLoc) => {
-      flashMsg(`Added Location (id: ${savedLoc.id})`)
-      utilService.updateQueryParams({ locId: savedLoc.id })
-      loadAndRenderLocs()
-    })
-    .catch((err) => {
-      console.error('OOPs:', err)
-      flashMsg('Cannot add location')
-    })
 }
 // only loc service
 
@@ -171,19 +190,38 @@ function onPanToUserPos() {
 
 function onUpdateLoc(locId) {
   locService.getById(locId).then((loc) => {
-    const rate = prompt('New rate?', loc.rate)
-    if (rate !== loc.rate) {
-      loc.rate = rate
-      locService
-        .save(loc)
-        .then((savedLoc) => {
-          flashMsg(`Rate was set to: ${savedLoc.rate}`)
-          loadAndRenderLocs()
-        })
-        .catch((err) => {
-          console.error('OOPs:', err)
-          flashMsg('Cannot update location')
-        })
+    const modal = showModal('Update Location', 'Update')
+    const nameInput = modal.querySelector('.new-loc-name')
+    const rateInput = modal.querySelector('.new-loc-rate')
+
+    nameInput.value = loc.name
+    rateInput.value = loc.rate
+
+    const form = modal.querySelector('form')
+    form.onsubmit = function (event) {
+      event.preventDefault()
+
+      const newRate = rateInput.value
+      const newName = nameInput.value
+
+      if (newRate !== loc.rate || newName !== loc.name) {
+        loc.rate = newRate
+        loc.name = newName
+
+        locService
+          .save(loc)
+          .then((savedLoc) => {
+            flashMsg(`Rate was set to: ${savedLoc.rate}`)
+            loadAndRenderLocs()
+            modal.close()
+          })
+          .catch((err) => {
+            console.error('OOPs:', err)
+            flashMsg('Cannot update location')
+          })
+      } else {
+        modal.close()
+      }
     }
   })
 }
@@ -354,6 +392,20 @@ function cleanStats(stats) {
     return acc
   }, [])
   return cleanedStats
+}
+
+function showModal(title, actionButtonText) {
+  const modal = document.querySelector('.update-loc-modal')
+  modal.querySelector('.modal-title').innerText = title
+  modal.querySelector('.modal-action-button').innerText = actionButtonText
+  modal.showModal()
+
+  const closeButton = modal.querySelector('.btn-close-modal')
+  closeButton.onclick = function () {
+    modal.close()
+  }
+
+  return modal
 }
 function onChangeTheme(val) {
   console.log(val)

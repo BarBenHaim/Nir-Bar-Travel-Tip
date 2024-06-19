@@ -97,6 +97,29 @@
     </main>
     <pre class="debug" hidden></pre>
     <div class="user-msg"></div>
+
+    <dialog class="update-loc-modal">
+      <form method="dialog">
+        <h3 class="modal-title">New location</h3>
+        <input
+          type="text"
+          class="new-loc-name"
+          placeholder="Location name"
+          required
+        />
+        <input
+          type="number"
+          class="new-loc-rate"
+          min="1"
+          max="5"
+          placeholder="Rate (1-5)"
+          required
+        />
+        <button type="submit" class="modal-action-button">Add</button>
+        <button type="button" class="btn-close-modal">✖</button>
+      </form>
+    </dialog>
+
     <script type="module" src="js/app.controller.js"></script>
   </body>
 </html>
