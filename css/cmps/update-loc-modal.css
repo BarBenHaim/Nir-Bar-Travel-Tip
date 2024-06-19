@@ -9,6 +9,11 @@
     top: 10%;
 }
 
+.update-loc-modal::backdrop {
+    background-color: #adadad;
+    opacity: 0.8;
+}
+
 .btn-close-modal {
     position: absolute;
     display: flex;
