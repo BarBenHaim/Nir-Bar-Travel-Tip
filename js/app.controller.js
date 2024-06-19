@@ -65,7 +65,7 @@ function renderLocs(locs) {
     elLocList.innerHTML = strHTML || 'No locs to show'
 
     renderLocStats()
-
+    renderLocStatsByDate()
     if (selectedLocId) {
         const selectedLoc = locs.find(loc => loc.id === selectedLocId)
         displayLoc(selectedLoc)
@@ -331,6 +331,13 @@ function onSetFilterBy({ txt, minRate }) {
 function renderLocStats() {
     locService.getLocCountByRateMap().then(stats => {
         handleStats(stats, 'loc-stats-rate')
+    })
+}
+
+function renderLocStatsByDate() {
+    locService.getLocCountByLastUpdated().then(stats => {
+        console.log(stats)
+        handleStats(stats, 'loc-stats-date')
     })
 }
 
